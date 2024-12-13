@@ -1,6 +1,7 @@
+// [V0_FILE]typescriptreact:file="cars-data.tsx" isFixed="true" isEdit="true" isQuickEdit="true" isMerged="true"
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Calendar, User, Fuel, Gauge, Heart, DollarSign, Star, Share2, Zap, Shield, Award, X, ZoomIn, Facebook, Twitter, Linkedin, Link } from 'lucide-react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, Calendar, User, Fuel, Gauge, Heart, DollarSign, Star, Share2, Zap, Shield, Award, X, ZoomIn, Facebook, Twitter, Linkedin, Link, Edit, Save } from 'lucide-react';
+import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
 import { IoMdColorFill } from "react-icons/io";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,7 +15,12 @@ export function CarsData() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showZoomModal, setShowZoomModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState(null);
+  const [error, setError] = useState(null);
+  const [newImages, setNewImages] = useState([]);
   const params = useParams();
+  const navigate = useNavigate();
 
   const fetchCarDetails = async () => {
     try {
@@ -32,6 +38,7 @@ export function CarsData() {
       const dataResponse = await response.json();
       console.log('API Response:', dataResponse);
       setData(dataResponse);
+      setEditedData(dataResponse);
     } catch (error) {
       console.error('Error fetching car details:', error);
     } finally {
@@ -43,14 +50,67 @@ export function CarsData() {
     fetchCarDetails();
   }, [params?.id]);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setNewImages(files);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      Object.keys(editedData).forEach(key => {
+        if (key !== 'images') {
+          formData.append(key, editedData[key]);
+        }
+      });
+      newImages.forEach(image => {
+        formData.append('images', image);
+      });
+
+      const response = await fetch(`http://localhost:3000/api/cars/update/${params?.id}`, {
+        method: 'PUT',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update car details');
+      }
+
+      const updatedData = await response.json();
+      setData(updatedData);
+      setIsEditing(false);
+      alert('Car details updated successfully!');
+    } catch (error) {
+      console.error('Error updating car details:', error);
+      setError('Failed to update car details. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-orange-50">
         <motion.div
           className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full"
-          // animate={{ rotate: 360 }}
+          animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-orange-50">
+        <p className="text-2xl text-red-600">{error}</p>
       </div>
     );
   }
@@ -128,6 +188,14 @@ export function CarsData() {
         <div className="md:flex">
           <div className="md:w-1/2 p-4">
             <div className="relative h-64 sm:h-80 md:h-96 mb-4 group">
+              {isEditing ? (
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleImageChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                />
+              ) : null}
               <motion.img
                 key={currentImageIndex}
                 src={data.images[currentImageIndex].url}
@@ -180,16 +248,34 @@ export function CarsData() {
           </div>
           <div className="md:w-1/2 p-8">
             <div className="flex justify-between items-center mb-4">
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-4xl font-bold text-gray-900"
-              >
-                {data.carName}
-              </motion.h2>
-              <div className="flex space-x-2">
-               
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="carName"
+                  value={editedData.carName}
+                  onChange={handleInputChange}
+                  className="text-4xl font-bold text-gray-900 border-b-2 border-orange-500 focus:outline-none"
+                />
+              ) : (
+                <motion.h2
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-4xl font-bold text-gray-900"
+                >
+                  {data.carName}
+                </motion.h2>
+              )}
+              <div className="flex space-x-2"> 
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsEditing(!isEditing)}
+                  className="p-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors duration-300"
+                  aria-label={isEditing ? "Save" : "Edit"}
+                >
+                  {isEditing ? <Save className="w-6 h-6" /> : <Edit className="w-6 h-6" />}
+                </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -207,7 +293,17 @@ export function CarsData() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="text-2xl font-semibold text-orange-600 mb-6"
             >
-              {data.brand} | {data.year}
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="brand"
+                  value={editedData.brand}
+                  onChange={handleInputChange}
+                  className="text-2xl font-semibold text-orange-600 border-b-2 border-orange-500 focus:outline-none"
+                />
+              ) : (
+                <>{data.brand} | {data.year}</>
+              )}
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -226,61 +322,111 @@ export function CarsData() {
             </motion.div>
             <div className="mb-6">
               <div className="flex space-x-4 mb-2">
-               
               </div>
               <AnimatePresence mode="wait">
-              
-                  <motion.div
-                    key="overview"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="grid grid-cols-2 gap-4"
-                  >
-                    <div className="flex items-center">
-                      <Calendar className="w-5 h-5 mr-2 text-orange-500" />
-                      <span>{data.brand}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Gauge className="w-5 h-5 mr-2 text-orange-500" />
-                      <span>{data.kilometer} km</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Fuel className="w-5 h-5 mr-2 text-orange-500" />
-                      <span>{data.fuelType}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <IoMdColorFill className="w-5 h-5 mr-2 text-orange-500" />
-                      <span>{data.color}</span>
-                    </div>
-                  </motion.div>
-                
-          
-                  <motion.div
-                    key="specs"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="grid grid-cols-2 gap-4 mt-3"
-                  >
-                    <div className="flex items-center">
-                      <User className="w-5 h-5 mr-2 text-orange-500" />
-                      <span>{data.owner} owner(s)</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Award className="w-5 h-5 mr-2 text-orange-500" />
-                      <span>{data.vehicleNumber}</span>
-                    </div>
-                  </motion.div>
-        
+                <motion.div
+                  key="overview"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-2 gap-4"
+                >
+                  <div className="flex items-center">
+                    <Calendar className="w-5 h-5 mr-2 text-orange-500" />
+                    <span>{isEditing ? (
+                      <input
+                        type="text"
+                        name="brand"
+                        value={editedData.brand}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-orange-500 focus:outline-none"
+                      />
+                    ) : data.brand}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Gauge className="w-5 h-5 mr-2 text-orange-500" />
+                    <span>{isEditing ? (
+                      <input
+                        type="text"
+                        name="kilometer"
+                        value={editedData.kilometer}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-orange-500 focus:outline-none"
+                      />
+                    ) : data.kilometer} km</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Fuel className="w-5 h-5 mr-2 text-orange-500" />
+                    <span>{isEditing ? (
+                      <input
+                        type="text"
+                        name="fuelType"
+                        value={editedData.fuelType}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-orange-500 focus:outline-none"
+                      />
+                    ) : data.fuelType}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <IoMdColorFill className="w-5 h-5 mr-2 text-orange-500" />
+                    <span>{isEditing ? (
+                      <input
+                        type="text"
+                        name="color"
+                        value={editedData.color}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-orange-500 focus:outline-none"
+                      />
+                    ) : data.color}</span>
+                  </div>
+                </motion.div>
+                <motion.div
+                  key="specs"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-2 gap-4 mt-3"
+                >
+                  <div className="flex items-center">
+                    <User className="w-5 h-5 mr-2 text-orange-500" />
+                    <span>{isEditing ? (
+                      <input
+                        type="text"
+                        name="owner"
+                        value={editedData.owner}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-orange-500 focus:outline-none"
+                      />
+                    ) : data.owner} owner(s)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Award className="w-5 h-5 mr-2 text-orange-500" />
+                    <span>{isEditing ? (
+                      <input
+                        type="text"
+                        name="vehicleNumber"
+                        value={editedData.vehicleNumber}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-orange-500 focus:outline-none"
+                      />
+                    ) : data.vehicleNumber}</span>
+                  </div>
+                </motion.div>
               </AnimatePresence>
             </div>
             <div className="mb-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Description</h3>
               <p className={`text-gray-600 ${showFullDescription ? '' : 'line-clamp-3'}`}>
-                {data.description}
+                {isEditing ? (
+                  <textarea
+                    name="description"
+                    value={editedData.description}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 rounded-md p-2 w-full"
+                  />
+                ) : data.description}
               </p>
               {data.description.length > 150 && (
                 <motion.button
@@ -295,14 +441,29 @@ export function CarsData() {
             </div>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
-            
-                <span className="text-4xl font-bold text-gray-900">₹{data.price.toLocaleString()}</span>
+                <span className="text-4xl font-bold text-gray-900">₹{isEditing ? (
+                  <input
+                    type="number"
+                    name="price"
+                    value={editedData.price}
+                    onChange={handleInputChange}
+                    className="text-4xl font-bold text-gray-900 border-b-2 border-orange-500 focus:outline-none w-32"
+                  />
+                ) : data.price.toLocaleString()}</span>
               </div>
               <div className="flex items-center">
-               
               </div>
             </div>
-           
+            {isEditing ? (
+              <div className="mt-6">
+                <button
+                  onClick={handleUpdate}
+                  className="w-full bg-orange-500 text-white py-2 px-4 rounded-full hover:bg-orange-600 transition-colors duration-300"
+                >
+                  Update Car Details
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       </motion.div>
@@ -414,4 +575,3 @@ export function CarsData() {
 }
 
 export default CarsData;
-
