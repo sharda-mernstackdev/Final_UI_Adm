@@ -19,6 +19,8 @@ import UserTestDrive from './components/UserTestDriveDetails';
 import CarsData from './components/CarsData';
 import TotalCars from './components/TotalCars';
 import NewUser from './components/NewUser';
+import NewCarUpload from './components/NewcarUpload';
+import NewcarDetails from './components/NewcarDetails';
 
 
 
@@ -50,6 +52,8 @@ function App() {
               <Route path="/carsdata/:id" element={<CarsData />} />
               <Route path="/total-car" element={<TotalCars/>} />
               <Route path="/new-user" element={<NewUser/>} />
+              <Route path="/new-car" element={<NewCarUpload/>} />
+              <Route path="/new-car-detail/:id" element={<NewcarDetails/>} />
             
             </Routes>
           </Layout>
