@@ -188,6 +188,8 @@ export function NewCars() {
   const [carImagesUploaded, setCarImagesUploaded] = useState(false);
   const [rcImageUploaded, setRcImageUploaded] = useState(false);
   const [formError, setFormError] = useState('');
+  const [carImagePreviews, setCarImagePreviews] = useState([null, null, null, null]);
+  const [rcImagePreview, setRcImagePreview] = useState(null);
 
   useEffect(() => {
     console.log("Component mounted");
@@ -273,16 +275,19 @@ export function NewCars() {
   const handleRCUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFormData(prevData => ({
-          ...prevData,
-          rcImage: event.target.result
-        }));
-      };
-      reader.readAsDataURL(file);
+      setFormData(prevData => ({
+        ...prevData,
+        rcImage: file
+      }));
       setRcUploaded(true);
       setRcImageUploaded(true);
+
+      // Preview image
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setRcImagePreview(event.target.result);
+      };
+      reader.readAsDataURL(file);
     } else {
       setRcUploaded(false);
       setRcImageUploaded(false);
@@ -300,12 +305,17 @@ export function NewCars() {
   const handleImageUpload = (e, index) => {
     const file = e.target.files[0];
     if (file) {
+      const newImages = [...carImages];
+      newImages[index] = file;
+      setCarImages(newImages);
+      setCarImagesUploaded(newImages.some(img => img !== null));
+
+      // Preview image
       const reader = new FileReader();
       reader.onload = (e) => {
-        const newImages = [...carImages];
-        newImages[index] = e.target.result;
-        setCarImages(newImages);
-        setCarImagesUploaded(newImages.some(img => img !== null));
+        const newPreviews = [...carImagePreviews];
+        newPreviews[index] = e.target.result;
+        setCarImagePreviews(newPreviews);
       };
       reader.readAsDataURL(file);
     }
@@ -320,18 +330,29 @@ export function NewCars() {
 
     try {
       const formDataToSend = new FormData();
+
+      // Append all form data except images
       Object.keys(formData).forEach((key) => {
-        if (key === 'carImages') {
-          formData[key].forEach((image, index) => {
-            if (image) {
-              formDataToSend.append(`carImages`, image);
-            }
-          });
-        } else if (key === 'rcImage' && formData[key]) {
-          formDataToSend.append('rcImage', formData[key]);
-        } else {
+        if (key !== 'carImages' && key !== 'rcImage') {
           formDataToSend.append(key, formData[key]);
         }
+      });
+
+      // Append car images
+      carImages.forEach((image, index) => {
+        if (image) {
+          formDataToSend.append(`carImages`, image);
+        }
+      });
+
+      // Append RC image
+      if (formData.rcImage) {
+        formDataToSend.append('rcImage', formData.rcImage);
+      }
+
+      // Append insurance details
+      Object.keys(insuranceDetails).forEach((key) => {
+        formDataToSend.append(`insurance_${key}`, insuranceDetails[key]);
       });
 
       if (!carImagesUploaded || !rcImageUploaded) {
@@ -357,6 +378,7 @@ export function NewCars() {
       }
 
       const data = await response.json();
+      console.log('Car created successfully:', data);
       toast.success('Car created successfully!');
       setShowThankYou(true);
       // Reset form or navigate to a different page
@@ -408,8 +430,6 @@ export function NewCars() {
     nextStep()
   }
 
-  
-
   return (
     <>
       <AnimatePresence>
@@ -446,7 +466,6 @@ export function NewCars() {
                       <span className="block sm:inline">{formError}</span>
                     </div>
                   )}
-
                   {step === 1 && (
                     <div className="space-y-6">
                       <div className="relative">
@@ -486,9 +505,9 @@ export function NewCars() {
                               <span className="text-xs text-center">{brand.name}</span>
                             </button>
                           ))}
-                        </div>
+                        </div></div>
                       </div>
-                    </div>
+                   
                   )}
 
                   {step === 2 && (
@@ -651,7 +670,7 @@ export function NewCars() {
                         className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all mb-4"
                         required
                       />
-                       <label htmlFor="rcImage" >RC Image</label>
+                      <label htmlFor="rcImage">RC Image</label>
                       <input
                         type="file"
                         accept=".pdf,.jpg,.jpeg,.png"
@@ -659,8 +678,8 @@ export function NewCars() {
                         onChange={handleRCUpload}
                         className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                       />
-                      {formData.rcImage && (
-                        <img src={formData.rcImage} alt="RC" className="mt-4 max-w-full h-auto" />
+                      {rcImagePreview && (
+                        <img src={rcImagePreview} alt="RC" className="mt-4 max-w-full h-auto" />
                       )}
                       {rcUploaded && formData.rcNumber && (
                         <p className="text-green-500">RC uploaded and number registered successfully!</p>
@@ -695,8 +714,8 @@ export function NewCars() {
                               htmlFor={`carImage${index}`}
                               className="w-full h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center cursor-pointer hover:border-orange-500 transition-colors"
                             >
-                              {carImages[index] ? (
-                                <img src={carImages[index]} alt={`Car ${index + 1}`} className="w-full h-full object-cover rounded-md" />
+                              {carImagePreviews[index] ? (
+                                <img src={carImagePreviews[index]} alt={`Car ${index + 1}`} className="w-full h-full object-cover rounded-md" />
                               ) : (
                                 <span className="text-gray-500">+ Add Image</span>
                               )}
@@ -961,7 +980,6 @@ export function NewCars() {
                       </button>
                     </div>
                   )}
-
                   {showThankYou && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}

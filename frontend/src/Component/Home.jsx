@@ -381,7 +381,7 @@ export function Home() {
       {/* Why Choose Us Section */}
       <section className="py-16 bg-gray-100 bg-cover" style={{ backgroundImage: `url('https://www.shutterstock.com/image-vector/car-abstract-vector-3d-modern-260nw-1951315810.jpg')` }}>
         <div className="container mx-auto px-4">
-          <h2 className="text-5xl font-bold italic mb-8 text-center text-white">Why Choose Us</h2>
+          <h2 className="text-5xl font-bold italic mb-8 text-center text-white">Why We're Your Best Choice</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {reasons.map((reason, index) => (
               <div key={index} className="bg-white rounded-lg p-6 shadow-md text-center">
