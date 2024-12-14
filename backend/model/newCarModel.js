@@ -18,6 +18,7 @@ const carSchema = new mongoose.Schema({
   phone: Number,
   whatsappUpdates: Boolean,
   carImages: [String],
+  price: Number,
   rcNumber: Number,
   rcImage: String,
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
