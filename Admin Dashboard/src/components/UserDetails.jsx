@@ -54,11 +54,6 @@ function UserDetails() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         
-
-
-
-
         <Link to={`/addToCart-details/${params.id}`}>
             <AdminCard
               title="Add To Cart"
