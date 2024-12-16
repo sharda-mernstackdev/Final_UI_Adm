@@ -61,6 +61,8 @@ function Cars() {
   const [visibleCars, setVisibleCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showMore, setShowMore] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = useState({ isOpen: false, carId: null });
 
   useEffect(() => {
     const loadCars = async () => {
@@ -68,7 +70,7 @@ function Cars() {
       try {
         const fetchedCars = await fetchCarsData();
         setCars(fetchedCars);
-        setVisibleCars(fetchedCars.slice(0, 6));
+        setVisibleCars(fetchedCars.slice(0, 5));
       } catch (error) {
         console.error('Error loading cars:', error);
         toast.error('Failed to load cars data!');
@@ -86,6 +88,47 @@ function Cars() {
     setVisibleCars(cars);
     setShowMore(true);
   };
+
+  const handleDeleteClick = (carId) => {
+    setDeleteConfirmation({ isOpen: true, carId });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const { carId } = deleteConfirmation;
+    if (!carId) {
+      console.error('No car ID provided for deletion');
+      return;
+    }
+    
+    try {
+      const response = await fetch(`http://localhost:3000/api/cars/delete/${carId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      // Remove the deleted car from the state
+      setCars(cars.filter(car => car._id !== carId));
+      setVisibleCars(visibleCars.filter(car => car._id !== carId));
+      toast.success('Car deleted successfully!');
+    } catch (err) {
+      console.error('Error handling delete:', err.message);
+      toast.error(`Failed to delete car: ${err.message}`);
+    } finally {
+      setDeleteConfirmation({ isOpen: false, carId: null });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirmation({ isOpen: false, carId: null });
+  };
+
+  const filteredCars = visibleCars.filter((car) =>
+    `${car.brand} ${car.carName}`.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="container mx-auto mt-10 px-4 mb-20">
@@ -105,109 +148,130 @@ function Cars() {
         </Link>
         <StatCard icon={FaCheckCircle} title="Available Cars" value={cars.filter(car => car.status === "Available").length} color="border-l-4 border-green-500" trend={2} />
         <StatCard icon={FaTags} title="Sold Cars" value={cars.filter(car => car.status === "Sold").length} color="border-l-4 border-red-500" trend={-3} />
-        <StatCard icon={FaChartLine} title="Average Price" value={`₹${Math.round(cars.reduce((acc, car) => acc + car.price, 0) / cars.length).toLocaleString()}`} color="border-l-4 border-yellow-500" trend={1} />
+        <StatCard icon={FaChartLine} title="Average Price" value={`₹${Math.round(cars.reduce((acc, car) => acc + car.price, 0) / cars.length || 0).toLocaleString()}`} color="border-l-4 border-yellow-500" trend={1} />
       </div>
 
       <ToastContainer position="bottom-right" autoClose={3000} />
 
-      <div className="mt-10">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500"></div>
-          </div>
-        ) : visibleCars.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-xl text-gray-600">No cars found.</p>
-          </div>
-        ) : (
-          <>
-            <motion.div
-              layout
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              <AnimatePresence>
-                {visibleCars.map((car) => (
-                  <motion.div
-                    key={car._id}
-                    className="bg-white rounded-xl overflow-hidden w-[300px] transition-all duration-300 hover:shadow-xl border border-gray-200 shadow-md shadow-orange-400"
-                    whileHover={{ y: -5 }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="mx-auto max-w-7xl">
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">Cars Inventory</h2>
+                <div className="relative w-full sm:w-64">
+                  <input
+                    type="text"
+                    placeholder="Search cars..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <svg
+                    className="absolute right-3 top-2.5 h-5 w-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <div className="relative h-48">
-                      <img
-                        src={car?.images?.[0]?.url || "/placeholder.svg"}
-                        alt={`${car.brand || "Brand"} ${car.carName || "Car Name"}`}
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="p-6 space-y-4">
-                      <h3 className="font-bold text-xl text-blue-800">
-                        {car.year || "Year"} {car.brand || "Brand"} {car.carName || "Car Name"}
-                      </h3>
-
-                      <div className="flex flex-wrap gap-2">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          <FaCar className="h-3 w-3 mr-1" />
-                          {car.kilometer} km
-                        </span>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          <FaGasPump className="h-3 w-3 mr-1" />
-                          {car.fuelType}
-                        </span>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                          <FaUser className="h-3 w-3 mr-1" />
-                          {car.owner}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-orange-500">
-                          ₹{car.price ? (car.price / 100000).toFixed(2) : "N/A"}L
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        {/* <div className="flex items-center text-sm text-gray-600">
-                          <FaMapMarkerAlt className="h-4 w-4 text-gray-400 mr-1" />
-                          Free Test Drive Available
-                        </div> */}
-                        <motion.a
-                          href={`/carsdata/${car._id}`}
-                          className="block w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors text-center font-medium group"
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                        >
-                          View Details
-                          <FaChevronRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" />
-                        </motion.a>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-            {!showMore && cars.length > 6 && (
-              <div className="mt-8 text-center">
-                <Link to='/total-car'
-                  onClick={handleViewMore}
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full inline-flex items-center shadow-lg"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  View More
-                  <FaChevronRight className="ml-2" />
-                </Link>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
               </div>
-            )}
-          </>
+
+              {loading ? (
+                <div className="flex justify-center items-center h-32">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                </div>
+              ) : filteredCars.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No cars found.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <AnimatePresence>
+                    {filteredCars.map((car) => (
+                      <motion.div
+                        key={car._id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="flex items-center justify-between p-4 bg-white border rounded-lg hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <img
+                            src={car?.images?.[0]?.url || "/placeholder.svg"}
+                            alt={`${car.brand} ${car.carName}`}
+                            className="w-16 h-16 object-cover rounded-lg"
+                          />
+                          <div>
+                            <h3 className="font-semibold text-lg">
+                              {car.year} {car.brand} {car.carName}
+                            </h3>
+                            <p className="text-gray-600 text-sm">
+                              ₹{car.price ? (car.price / 1000).toFixed(2) : "N/A"}L • {car.fuelType} • {car.kilometer} km
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <a
+                            href={`/carsdata/${car._id}`}
+                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                          >
+                            View
+                          </a>
+                          <button
+                            onClick={() => handleDeleteClick(car._id)}
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+                
+              )}
+            </div>
+            <div className="flex items-center justify-center  bg-gray-100">
+  <Link to='/total-car' 
+    className="px-6 py-3 bg-gradient-to-r bg-orange-500 text-white font-bold rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out"
+  >
+     View More
+  </Link>
+</div>
+          </div>
+        </div>
+
+        {deleteConfirmation.isOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-bold">Confirm Deletion</h2>
+              <p className="mt-2 text-sm text-gray-600">
+                Are you sure you want to delete this car? This action cannot be undone.
+              </p>
+              <div className="mt-4 flex justify-end space-x-2">
+                <button
+                  onClick={handleDeleteCancel}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -215,4 +279,3 @@ function Cars() {
 }
 
 export default Cars;
-
