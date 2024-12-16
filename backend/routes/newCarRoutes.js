@@ -14,7 +14,7 @@ const cpUpload = upload.fields([
   
 router.get('/getCar', getCars);
 router.get('/getCar/:id', getCarById);
-router.put('/updateCar/:id',authMiddleware, updateCar);
+router.put('/updateCar/:id', updateCar);
 router.delete('/deleteCar/:id',authMiddleware, deleteCar);
 
 module.exports = router;

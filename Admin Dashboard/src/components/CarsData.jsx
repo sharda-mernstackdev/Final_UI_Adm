@@ -1,138 +1,58 @@
-// [V0_FILE]typescriptreact:file="cars-data.tsx" isFixed="true" isEdit="true" isQuickEdit="true" isMerged="true"
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Calendar, User, Fuel, Gauge, Heart, DollarSign, Star, Share2, Zap, Shield, Award, X, ZoomIn, Facebook, Twitter, Linkedin, Link, Edit, Save } from 'lucide-react';
-import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Calendar, User, Fuel, Gauge, Share2, Zap, Shield, Award, X, ZoomIn, Facebook, Twitter, Linkedin, Link, Edit2, Save } from 'lucide-react';
 import { IoMdColorFill } from "react-icons/io";
 import { FaWhatsapp } from "react-icons/fa";
-import { motion, AnimatePresence } from 'framer-motion';
+import { useParams } from 'react-router-dom';
 
-export function CarsData() {
+const CarDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
   const [showZoomModal, setShowZoomModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState(null);
-  const [error, setError] = useState(null);
-  const [newImages, setNewImages] = useState([]);
   const params = useParams();
-  const navigate = useNavigate();
-
-  const fetchCarDetails = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/cars/cars/${params?.id}`, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch car details');
-      }
-
-      const dataResponse = await response.json();
-      console.log('API Response:', dataResponse);
-      setData(dataResponse);
-      setEditedData(dataResponse);
-    } catch (error) {
-      console.error('Error fetching car details:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchCarDetails = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:3000/api/cars/cars/${params?.id}`, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch car details');
+        }
+
+        const dataResponse = await response.json();
+        console.log('API Response:', dataResponse);
+        setData(dataResponse);
+        setEditedData(dataResponse);
+      } catch (error) {
+        console.error('Error fetching car details:', error);
+        setError('Failed to fetch car details. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchCarDetails();
   }, [params?.id]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setNewImages(files);
-  };
-
-  const handleUpdate = async () => {
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      Object.keys(editedData).forEach(key => {
-        if (key !== 'images') {
-          formData.append(key, editedData[key]);
-        }
-      });
-      newImages.forEach(image => {
-        formData.append('images', image);
-      });
-
-      const response = await fetch(`http://localhost:3000/api/cars/update/${params?.id}`, {
-        method: 'PUT',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update car details');
-      }
-
-      const updatedData = await response.json();
-      setData(updatedData);
-      setIsEditing(false);
-      alert('Car details updated successfully!');
-    } catch (error) {
-      console.error('Error updating car details:', error);
-      setError('Failed to update car details. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-orange-50">
-        <motion.div
-          className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-orange-50">
-        <p className="text-2xl text-red-600">{error}</p>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-orange-50">
-        <p className="text-2xl text-gray-600">No car data available.</p>
-      </div>
-    );
-  }
-
   const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % data.images.length);
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % data?.images.length);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + data.images.length) % data.images.length);
-  };
-
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + data?.images.length) % data?.images.length);
   };
 
   const openZoomModal = () => {
@@ -144,6 +64,7 @@ export function CarsData() {
   };
 
   const openShareModal = () => {
+    setShowZoomModal(false);
     setShowShareModal(true);
   };
 
@@ -151,24 +72,23 @@ export function CarsData() {
     setShowShareModal(false);
   };
 
-  const shareUrl = `${window.location.origin}/cars/${data._id}`;
+  const shareUrl = `${window.location.origin}/cars/${data?._id}`;
 
-  const shareViaFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
-  };
+const shareViaFacebook = () => {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+};
 
-  const shareViaTwitter = () => {
-    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`Check out this ${data.carName} ${data.brand}!`)}`, '_blank');
-  };
+const shareViaTwitter = () => {
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`Check out this ${data?.carName} ${data?.brand}!`)}`, '_blank');
+};
 
-  const shareViaLinkedIn = () => {
-    window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`${data.carName} ${data.brand}`)}&summary=${encodeURIComponent(data.description)}`, '_blank');
-  };
+const shareViaLinkedIn = () => {
+  window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`${data?.carName} ${data?.brand}`)}&summary=${encodeURIComponent(data?.description)}`, '_blank');
+};
 
-  const shareViaWhatsApp = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(`Check out this ${data.carName} ${data.brand}! ${shareUrl}`)}`, '_blank');
-  };
-
+const shareViaWhatsApp = () => {
+  window.open(`https://wa.me/?text=${encodeURIComponent(`Check out this ${data?.carName} ${data?.brand}! ${shareUrl}`)}`, '_blank');
+};
   const copyLinkToClipboard = () => {
     navigator.clipboard.writeText(shareUrl).then(() => {
       alert('Link copied to clipboard!');
@@ -176,6 +96,48 @@ export function CarsData() {
       console.error('Failed to copy link: ', err);
     });
   };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`http://localhost:3000/api/cars/update/${params?.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editedData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update car details');
+      }
+
+      const updatedData = await response.json();
+      setData(updatedData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating car details:', error);
+      setError('Failed to update car details. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!data) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-orange-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -188,14 +150,6 @@ export function CarsData() {
         <div className="md:flex">
           <div className="md:w-1/2 p-4">
             <div className="relative h-64 sm:h-80 md:h-96 mb-4 group">
-              {isEditing ? (
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleImageChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                />
-              ) : null}
               <motion.img
                 key={currentImageIndex}
                 src={data.images[currentImageIndex].url}
@@ -248,34 +202,25 @@ export function CarsData() {
           </div>
           <div className="md:w-1/2 p-8">
             <div className="flex justify-between items-center mb-4">
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="carName"
-                  value={editedData.carName}
-                  onChange={handleInputChange}
-                  className="text-4xl font-bold text-gray-900 border-b-2 border-orange-500 focus:outline-none"
-                />
-              ) : (
-                <motion.h2
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="text-4xl font-bold text-gray-900"
-                >
-                  {data.carName}
-                </motion.h2>
-              )}
-              <div className="flex space-x-2"> 
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="p-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors duration-300"
-                  aria-label={isEditing ? "Save" : "Edit"}
-                >
-                  {isEditing ? <Save className="w-6 h-6" /> : <Edit className="w-6 h-6" />}
-                </motion.button>
+              <motion.h2
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-4xl font-bold text-gray-900"
+              >
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="carName"
+                    value={editedData.carName}
+                    onChange={handleInputChange}
+                    className="w-full text-4xl font-bold text-gray-900 border-b-2 border-orange-500 focus:outline-none"
+                  />
+                ) : (
+                  data.carName
+                )}
+              </motion.h2>
+              <div className="flex space-x-2">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -285,6 +230,27 @@ export function CarsData() {
                 >
                   <Share2 className="w-6 h-6" />
                 </motion.button>
+                {isEditing ? (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleSave}
+                    className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors duration-300"
+                    aria-label="Save"
+                  >
+                    <Save className="w-6 h-6" />
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleEdit}
+                    className="p-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors duration-300"
+                    aria-label="Edit"
+                  >
+                    <Edit2 className="w-6 h-6" />
+                  </motion.button>
+                )}
               </div>
             </div>
             <motion.div
@@ -294,15 +260,25 @@ export function CarsData() {
               className="text-2xl font-semibold text-orange-600 mb-6"
             >
               {isEditing ? (
-                <input
-                  type="text"
-                  name="brand"
-                  value={editedData.brand}
-                  onChange={handleInputChange}
-                  className="text-2xl font-semibold text-orange-600 border-b-2 border-orange-500 focus:outline-none"
-                />
+                <>
+                  <input
+                    type="text"
+                    name="brand"
+                    value={editedData.brand}
+                    onChange={handleInputChange}
+                    className="w-1/2 text-2xl font-semibold text-orange-600 border-b-2 border-orange-500 focus:outline-none"
+                  />
+                  {' | '}
+                  <input
+                    type="number"
+                    name="year"
+                    value={editedData.year}
+                    onChange={handleInputChange}
+                    className="w-1/4 text-2xl font-semibold text-orange-600 border-b-2 border-orange-500 focus:outline-none"
+                  />
+                </>
               ) : (
-                <>{data.brand} | {data.year}</>
+               ` ${data.brand} | ${data.year}`
               )}
             </motion.div>
             <motion.div
@@ -321,8 +297,6 @@ export function CarsData() {
               </span>
             </motion.div>
             <div className="mb-6">
-              <div className="flex space-x-4 mb-2">
-              </div>
               <AnimatePresence mode="wait">
                 <motion.div
                   key="overview"
@@ -334,51 +308,59 @@ export function CarsData() {
                 >
                   <div className="flex items-center">
                     <Calendar className="w-5 h-5 mr-2 text-orange-500" />
-                    <span>{isEditing ? (
+                    {isEditing ? (
                       <input
-                        type="text"
-                        name="brand"
-                        value={editedData.brand}
+                        type="number"
+                        name="year"
+                        value={editedData.year}
                         onChange={handleInputChange}
-                        className="border-b-2 border-orange-500 focus:outline-none"
+                        className="w-full border-b-2 border-orange-500 focus:outline-none"
                       />
-                    ) : data.brand}</span>
+                    ) : (
+                      <span>{data.year}</span>
+                    )}
                   </div>
                   <div className="flex items-center">
                     <Gauge className="w-5 h-5 mr-2 text-orange-500" />
-                    <span>{isEditing ? (
+                    {isEditing ? (
                       <input
-                        type="text"
+                        type="number"
                         name="kilometer"
                         value={editedData.kilometer}
                         onChange={handleInputChange}
-                        className="border-b-2 border-orange-500 focus:outline-none"
+                        className="w-full border-b-2 border-orange-500 focus:outline-none"
                       />
-                    ) : data.kilometer} km</span>
+                    ) : (
+                      <span>{data.kilometer} km</span>
+                    )}
                   </div>
                   <div className="flex items-center">
                     <Fuel className="w-5 h-5 mr-2 text-orange-500" />
-                    <span>{isEditing ? (
+                    {isEditing ? (
                       <input
                         type="text"
                         name="fuelType"
                         value={editedData.fuelType}
                         onChange={handleInputChange}
-                        className="border-b-2 border-orange-500 focus:outline-none"
+                        className="w-full border-b-2 border-orange-500 focus:outline-none"
                       />
-                    ) : data.fuelType}</span>
+                    ) : (
+                      <span>{data.fuelType}</span>
+                    )}
                   </div>
                   <div className="flex items-center">
                     <IoMdColorFill className="w-5 h-5 mr-2 text-orange-500" />
-                    <span>{isEditing ? (
+                    {isEditing ? (
                       <input
                         type="text"
                         name="color"
                         value={editedData.color}
                         onChange={handleInputChange}
-                        className="border-b-2 border-orange-500 focus:outline-none"
+                        className="w-full border-b-2 border-orange-500 focus:outline-none"
                       />
-                    ) : data.color}</span>
+                    ) : (
+                      <span>{data.color}</span>
+                    )}
                   </div>
                 </motion.div>
                 <motion.div
@@ -391,79 +373,77 @@ export function CarsData() {
                 >
                   <div className="flex items-center">
                     <User className="w-5 h-5 mr-2 text-orange-500" />
-                    <span>{isEditing ? (
+                    {isEditing ? (
                       <input
-                        type="text"
+                        type="number"
                         name="owner"
                         value={editedData.owner}
                         onChange={handleInputChange}
-                        className="border-b-2 border-orange-500 focus:outline-none"
+                        className="w-full border-b-2 border-orange-500 focus:outline-none"
                       />
-                    ) : data.owner} owner(s)</span>
+                    ) : (
+                      <span>{data.owner} owner(s)</span>
+                    )}
                   </div>
                   <div className="flex items-center">
                     <Award className="w-5 h-5 mr-2 text-orange-500" />
-                    <span>{isEditing ? (
+                    {isEditing ? (
                       <input
                         type="text"
                         name="vehicleNumber"
                         value={editedData.vehicleNumber}
                         onChange={handleInputChange}
-                        className="border-b-2 border-orange-500 focus:outline-none"
+                        className="w-full border-b-2 border-orange-500 focus:outline-none"
                       />
-                    ) : data.vehicleNumber}</span>
+                    ) : (
+                      <span>{data.vehicleNumber}</span>
+                    )}
                   </div>
                 </motion.div>
               </AnimatePresence>
             </div>
             <div className="mb-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Description</h3>
-              <p className={`text-gray-600 ${showFullDescription ? '' : 'line-clamp-3'}`}>
-                {isEditing ? (
-                  <textarea
-                    name="description"
-                    value={editedData.description}
-                    onChange={handleInputChange}
-                    className="border border-gray-300 rounded-md p-2 w-full"
-                  />
-                ) : data.description}
-              </p>
-              {data.description.length > 150 && (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowFullDescription(!showFullDescription)}
-                  className="text-orange-500 hover:text-orange-600 mt-2 focus:outline-none"
-                >
-                  {showFullDescription ? 'Read less' : 'Read more'}
-                </motion.button>
+              {isEditing ? (
+                <textarea
+                  name="description"
+                  value={editedData.description}
+                  onChange={handleInputChange}
+                  className="w-full h-32 p-2 border-2 border-orange-500 rounded-md focus:outline-none"
+                />
+              ) : (
+                <>
+                  <p className={`text-gray-600 ${showFullDescription ? '' : 'line-clamp-3'}`}>
+                    {data.description}
+                  </p>
+                  {data.description.length > 150 && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setShowFullDescription(!showFullDescription)}
+                      className="text-orange-500 hover:text-orange-600 mt-2 focus:outline-none"
+                    >
+                      {showFullDescription ? 'Read less' : 'Read more'}
+                    </motion.button>
+                  )}
+                </>
               )}
             </div>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
-                <span className="text-4xl font-bold text-gray-900">₹{isEditing ? (
+                {isEditing ? (
                   <input
                     type="number"
                     name="price"
                     value={editedData.price}
                     onChange={handleInputChange}
-                    className="text-4xl font-bold text-gray-900 border-b-2 border-orange-500 focus:outline-none w-32"
+                    className="text-4xl font-bold text-gray-900 w-full border-b-2 border-orange-500 focus:outline-none"
                   />
-                ) : data.price.toLocaleString()}</span>
-              </div>
-              <div className="flex items-center">
+                ) : (
+                  <span className="text-4xl font-bold text-gray-900">₹{data.price.toLocaleString()}</span>
+                )}
               </div>
             </div>
-            {isEditing ? (
-              <div className="mt-6">
-                <button
-                  onClick={handleUpdate}
-                  className="w-full bg-orange-500 text-white py-2 px-4 rounded-full hover:bg-orange-600 transition-colors duration-300"
-                >
-                  Update Car Details
-                </button>
-              </div>
-            ) : null}
           </div>
         </div>
       </motion.div>
@@ -572,6 +552,6 @@ export function CarsData() {
       </AnimatePresence>
     </div>
   );
-}
+};
 
-export default CarsData;
+export default CarDetails;
