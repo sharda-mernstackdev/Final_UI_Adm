@@ -104,7 +104,7 @@ function TotalUser() {
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
-                        to={`/user-details/${user._id}`}
+                        to={`/admin/user-details/${user._id}`}
                         className="text-sm font-bold text-black-600 hover:text-orange-500 "
                       >
                         <div className="flex items-center">

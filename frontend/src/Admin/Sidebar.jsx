@@ -9,13 +9,13 @@ import {
 import { BiStats, BiCar, BiBookOpen } from "react-icons/bi";
 import { AiOutlineDashboard } from "react-icons/ai";
 const routes = [
-  { name: "Dashboard", path: "/", icon: AiOutlineDashboard }, // A modern dashboard icon
-  { name: "Users", path: "/users", icon: FaUsers }, // User management remains the same
-  { name: "Cars", path: "/cars", icon: MdOutlineDirectionsCar }, // Car icon for the car section
-  { name: "Upload Car", path: "/upload", icon: FaUpload }, // File upload for uploading cars
-  { name: "New Car Uploaded", path: "/new-car", icon: BiCar }, // Focused car icon for new uploads
-  { name: "Test Drive Book", path: "/test-drive", icon: BiBookOpen }, // Booking-related icon
-  { name: "Settings", path: "/settings", icon: MdOutlineSettingsSuggest }, // Modern settings icon
+  { name: "Dashboard", path: "/admin", icon: AiOutlineDashboard }, // A modern dashboard icon
+  { name: "Users", path: "/admin/users", icon: FaUsers }, // User management remains the same
+  { name: "Cars", path: "/admin/cars", icon: MdOutlineDirectionsCar }, // Car icon for the car section
+  { name: "Upload Car", path: "/admin/upload", icon: FaUpload }, // File upload for uploading cars
+  { name: "New Car Uploaded", path: "/admin/new-car", icon: BiCar }, // Focused car icon for new uploads
+  { name: "Test Drive Book", path: "/admin/test-drive", icon: BiBookOpen }, // Booking-related icon
+  { name: "Settings", path: "/admin/settings", icon: MdOutlineSettingsSuggest }, // Modern settings icon
 ];
 
 export default function Sidebar({ open, setOpen }) {
@@ -24,16 +24,16 @@ export default function Sidebar({ open, setOpen }) {
   return (
     <>
       {/* Overlay for small screens */}
-      <div
+      {/* <div
         className={`fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden ${
           open ? 'block' : 'hidden'
         }`}
         onClick={() => setOpen(false)}
-      ></div>
+      ></div> */}
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-orange-600 lg:translate-x-0 lg:static lg:inset-0 ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 h-[800px] overflow-y-auto mt-[-100px]  transition duration-300 transform bg-orange-600 lg:translate-x-0 lg:static lg:inset-0 ${
           open ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'
         }`}
       >

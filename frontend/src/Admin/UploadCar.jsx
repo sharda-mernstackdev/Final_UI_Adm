@@ -8,7 +8,7 @@ const brands = ['Tata', 'Maruti Suzuki', 'Kia', 'Toyota', 'Honda', 'Ford', 'Hyun
 const fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'CNG', 'LPG'];
 // const bodyTypes = ['Hatchback', 'Sedan', 'SUV', 'MUV', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Jeep'];
 
-const Upload = () => {
+const UploadCar = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     carName: '',
@@ -773,5 +773,5 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default UploadCar;
 

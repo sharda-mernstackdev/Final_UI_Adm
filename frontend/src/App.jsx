@@ -1,23 +1,16 @@
-
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import Navbar from "./Component/Navbar";
-import Login from "./Component/Login";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
 import Footer from "./Component/Footer";
-
+import Login from "./Component/Login";
 import Home from "./Component/Home";
-
-
 import CarsData from "./Component/CarsData";
 import Financing from "./Component/Financing";
 import Insurance from "./Component/Insurance";
 import VehicleHistory from "./Component/VehicleHistory";
 import TradeInVlaue from "./Component/TradeInVlaue";
 import Showroom from "./Component/Showroom";
-
 import DealerShip from "./Component/DealerShip";
-// import TestDriveLocation from './Component/TestDriveLocation'
 import MyAppointment from "./Component/MyAppointment";
 import MyBooking from "./Component/MyBooking";
 import BecomePartner from "./Component/BecomePartner";
@@ -34,170 +27,114 @@ import Testimonial from "./Component/Testimonial";
 import CarUpload from "./Component/CarUpload";
 import Signup from "./Component/Signup";
 import { ToastContainer } from "react-toastify";
-
 import UsedCars from "./Component/UsedCars";
 import UserDetails from "./Component/UserDetails";
 import AddToCart from "./Component/AddToCart";
 import ForgotPassword from "./Component/ForgotPassword";
-import ProfileSetting from "./Component/ProfileSetting"
+import ProfileSetting from "./Component/ProfileSetting";
 import TestDrive from "./Component/TestDrive";
 import TestDetails from "./Component/TestDetails";
 import TestDriveStatus from "./Component/TestDriveStatus";
+import AdminLayout from "./Admin/AdminLayout";
+import Dashboard from "./Admin/Dashboard";
+import Cars from "./Admin/Cars";
+import Analytics from "./Admin/Analytics";
+import Billing from "./Admin/Billing";
+import Settings from "./Admin/Setting";
+import TotalUser from "./Admin/TotalUser";
+import ActiveUser from "./Admin/ActiveUSer";
+import UploadCar from "./Admin/UploadCar";
+import AddToCartDetails from "./Admin/AddToCartDetails";
+import NewCarUpload from "./Admin/NewcarUpload";
+import NewcarDetails from "./Admin/NewcarDetails";
+import Users from "./Admin/Users";
+import UserTestDrive from "./Admin/UserTestDriveDetails";
+import BookTestDrive from "./Admin/BookTestDrive";
+import TestDriveDetails from "./Admin/TestDriveDetails";
+import TotalCars from "./Admin/TotalCars";
+import NewUser from "./Admin/NewUser";
+import CarDetails from "./Admin/CarsData";
 
-
-function App() {
-
+// Helper to conditionally show Navbar/Footer
+const LayoutWrapper = ({ children }) => {
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith("/admin");
 
   return (
-    
-      <Router>
-        <Navbar />
+    <>
+      {!isAdminPath && <Navbar />} {/* Show Navbar for non-admin routes */}
+      {children} {/* Render all route content */}
+      {!isAdminPath && <Footer />} {/* Show Footer for non-admin routes */}
+    </>
+  );
+};
 
+function App() {
+  return (
+    <Router>
+      <LayoutWrapper>
         <Routes>
+          {/* Public Routes */}
           <Route path="/login" element={<Login />} />
-        </Routes>
-
-        <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
-        </Routes>
-
-        <Routes>
           <Route path="/signup" element={<Signup />} />
-        </Routes>
-
-        <Routes>
           <Route path="/" element={<Home />} />
-        </Routes>
-
-        {/* <Routes>
-          <Route path="/usedcars" element={<AllCars />} />
-        </Routes> */}
-
-        <Routes>
           <Route path="/carsdata/:id" element={<CarsData />} />
-        </Routes>
-
-        <Routes>
           <Route path="/testdrive/:id" element={<TestDrive />} />
-        </Routes>
-
-         <Routes>
           <Route path="/testdriveStatus" element={<TestDriveStatus />} />
-        </Routes>
-
-        
-
-        <Routes>
           <Route path="/testDrive-details/:id" element={<TestDetails />} />
-        </Routes>
-
-        <Routes>
           <Route path="/service" element={<Services />} />
-        </Routes>
-
-        <Routes>
           <Route path="/financing" element={<Financing />} />
-        </Routes>
-
-        <Routes>
           <Route path="/insurance" element={<Insurance />} />
-        </Routes>
-
-        <Routes>
           <Route path="/vehicle-history" element={<VehicleHistory />} />
-        </Routes>
-
-        <Routes>
           <Route path="/cart" element={<AddToCart />} />
-        </Routes>
-
-        <Routes>
           <Route path="/trade-in" element={<TradeInVlaue />} />
-        </Routes>
-
-        <Routes>
           <Route path="/showrooms" element={<Showroom />} />
-        </Routes>
-
-        <Routes>
           <Route path="/dealerships" element={<DealerShip />} />
-        </Routes>
-
-        {/* <Routes>
-        <Route path="/test-drive-locations" element={<TestDriveLocation/>} />
-      </Routes> */}
-
-        <Routes>
           <Route path="/my-appointments" element={<MyAppointment />} />
-        </Routes>
-
-        <Routes>
           <Route path="/my-bookings" element={<MyBooking />} />
-        </Routes>
-
-        <Routes>
           <Route path="/my-orders" element={<MyOrder />} />
-        </Routes>
-
-        <Routes>
           <Route path="/profile" element={<ProfileSetting />} />
-        </Routes>
-
-        <Routes>
           <Route path="/carupload" element={<CarUpload />} />
-        </Routes>
-
-        <Routes>
           <Route path="/usedcars" element={<UsedCars />} />
-        </Routes>
-
-    
-
-        <Routes>
           <Route path="/help" element={<HelpCenter />} />
-        </Routes>
-
-        <Routes>
           <Route path="/faq" element={<FAQ />} />
-        </Routes>
-
-        <Routes>
           <Route path="/about" element={<About />} />
-        </Routes>
-
-        <Routes>
           <Route path="/contact" element={<ContactUs />} />
-        </Routes>
-
-        <Routes>
           <Route path="/sell-car" element={<NewCars />} />
-        </Routes>
-
-        <Routes>
           <Route path="/new-car" element={<NewCars />} />
-        </Routes>
-
-        <Routes>
           <Route path="/challan" element={<Echallan />} />
-        </Routes>
-
-        <Routes>
           <Route path="/terms" element={<Policy />} />
-        </Routes>
-
-        <Routes>
           <Route path="/testimonials" element={<Testimonial />} />
+
+          {/* Admin Panel Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="cars" element={<Cars />} />
+            <Route path="users" element={<Users />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="billing" element={<Billing />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="upload" element={<UploadCar />} />
+            <Route path="total-user" element={<TotalUser />} />
+            <Route path="active-user" element={<ActiveUser />} />
+            <Route path="user-details/:id" element={<UserDetails />} />
+            <Route path="test-drive" element={<BookTestDrive />} />
+            <Route path="testDrive-details/:id" element={<TestDriveDetails />} />
+            <Route path="book-drive-details/:id" element={<UserTestDrive />} />
+            <Route path="addToCart-details/:id" element={<AddToCartDetails />} />
+            <Route path="total-car" element={<TotalCars />} />
+            <Route path="new-user" element={<NewUser />} />
+            <Route path="new-car" element={<NewCarUpload />} />
+            <Route path="carsdata/:id" element={<CarDetails />} />
+            <Route path="new-car-detail/:id" element={<NewcarDetails />} />
+          </Route>
         </Routes>
+      </LayoutWrapper>
 
-        {/* <Routes>
-          <Route path="/" element={<UserDetails/>} />
-        </Routes> */}
-
-
-        <ToastContainer />
-        <Footer />
-      </Router>
-      
+      {/* Toast Notifications */}
+      <ToastContainer />
+    </Router>
   );
 }
 

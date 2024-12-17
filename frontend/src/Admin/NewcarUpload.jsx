@@ -153,7 +153,7 @@ export default function NewCarUpload() {
               </motion.div>
 
               {/* View Car Listing Button */}
-              <Link to={`/new-car-detail/${car._id}`}>
+              <Link to={`/admin/new-car-detail/${car._id}`}>
                 <motion.button
                   className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-blue-900 active:scale-95 mt-4"
                   whileHover={{ scale: 1.03 }}

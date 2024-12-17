@@ -182,7 +182,7 @@ const TestDriveDetails = () => {
         console.error('Error Details:', errorDetails);
         throw new Error(`Error: ${response.status} - ${errorDetails.message}`);
       }
-      navigate('/test-drive')
+      navigate('/admin/test-drive')
     } catch (err) {
       console.error('Error handling cancel:', err.message);
     }
@@ -207,7 +207,7 @@ const TestDriveDetails = () => {
         console.error('Error Details:', errorDetails);
         throw new Error(`Error: ${response.status} - ${errorDetails.message}`);
       }
-      navigate('/test-drive')
+      navigate('/admin/test-drive')
     } catch (err) {
       console.error('Error handling cancel:', err.message);
     }

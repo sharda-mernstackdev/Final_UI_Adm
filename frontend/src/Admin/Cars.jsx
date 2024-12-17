@@ -134,7 +134,7 @@ function Cars() {
     <div className="container mx-auto mt-10 px-4 mb-20">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Cars Management</h1>
-        <Link to='/upload'
+        <Link to='/admin/upload'
           className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-2 px-4 rounded-full inline-flex items-center shadow-lg"
         >
           <FaPlus className="h-5 w-5 mr-2" />
@@ -143,7 +143,7 @@ function Cars() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <Link to='/total-car'>
+        <Link to='/admin/total-car'>
           <StatCard icon={FaCar} title="Total Cars" value={cars.length} color="border-l-4 border-blue-500" trend={5} />
         </Link>
         <StatCard icon={FaCheckCircle} title="Available Cars" value={cars.filter(car => car.status === "Available").length} color="border-l-4 border-green-500" trend={2} />
@@ -220,7 +220,7 @@ function Cars() {
                         </div>
                         <div className="flex space-x-2">
                           <a
-                            href={`/carsdata/${car._id}`}
+                            href={`/admin/carsdata/${car._id}`}
                             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                           >
                             View
@@ -240,7 +240,7 @@ function Cars() {
               )}
             </div>
             <div className="flex items-center justify-center  bg-gray-100">
-  <Link to='/total-car' 
+  <Link to='/admin/total-car' 
     className="px-6 py-3 bg-gradient-to-r bg-orange-500 text-white font-bold rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out"
   >
      View More

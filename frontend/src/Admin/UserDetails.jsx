@@ -54,7 +54,7 @@ function UserDetails() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link to={`/addToCart-details/${params.id}`}>
+        <Link to={`/admin/addToCart-details/${params.id}`}>
             <AdminCard
               title="Add To Cart"
               icon={FaShoppingCart}
@@ -77,7 +77,7 @@ function UserDetails() {
 
 
 
-          <Link to= {`/book-drive-details/${params.id}`}>
+          <Link to= {`/admin/book-drive-details/${params.id}`}>
             <AdminCard
               title="Book Test Drive"
               icon={FaCalendarAlt}

@@ -242,7 +242,7 @@ export default function UserTestDrive() {
                         <motion.div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                       </div>
 
-                      <Link to={`/testDrive-details/${drive._id}`}>
+                      <Link to={`/admin/testDrive-details/${drive._id}`}>
                         <motion.div className="p-4">
                           <motion.h2 className="text-lg font-semibold text-gray-900 mb-3 truncate">
                             {carData[carIdString]?.carName ||

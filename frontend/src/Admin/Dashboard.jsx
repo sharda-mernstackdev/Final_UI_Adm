@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { ArrowSmUpIcon, ArrowSmDownIcon } from '@heroicons/react/solid';
+import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
+
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -42,7 +44,7 @@ export default function Dashboard() {
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0 bg-orange-500 rounded-md p-3">
-                  <ArrowSmUpIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                  <FiArrowUp className="h-6 w-6 text-white" aria-hidden="true" />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
@@ -53,9 +55,9 @@ export default function Dashboard() {
                         item.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
                       }`}>
                         {item.changeType === 'increase' ? (
-                          <ArrowSmUpIcon className="self-center flex-shrink-0 h-5 w-5 text-green-500" aria-hidden="true" />
+                          <FiArrowUp className="self-center flex-shrink-0 h-5 w-5 text-green-500" aria-hidden="true" />
                         ) : (
-                          <ArrowSmDownIcon className="self-center flex-shrink-0 h-5 w-5 text-red-500" aria-hidden="true" />
+                          <FiArrowDown className="self-center flex-shrink-0 h-5 w-5 text-red-500" aria-hidden="true" />
                         )}
                         <span className="sr-only">{item.changeType === 'increase' ? 'Increased' : 'Decreased'} by</span>
                         {item.change}

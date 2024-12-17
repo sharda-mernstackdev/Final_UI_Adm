@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MenuIcon, BellIcon, PencilIcon, ChevronDownIcon, LogoutIcon, CogIcon, UserIcon } from '@heroicons/react/outline';
 
-const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
+const NavbarAdmin = ({ sidebarOpen, setSidebarOpen }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -179,24 +179,9 @@ const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   );
 };
 
-export default Navbar;
 
 
 
-// const shareUrl = `${window.location.origin}/cars/${data?._id}`;
 
-// const shareViaFacebook = () => {
-//   window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
-// };
 
-// const shareViaTwitter = () => {
-//   window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`Check out this ${data?.carName} ${data?.brand}!`)}`, '_blank');
-// };
-
-// const shareViaLinkedIn = () => {
-//   window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`${data?.carName} ${data?.brand}`)}&summary=${encodeURIComponent(data?.description)}`, '_blank');
-// };
-
-// const shareViaWhatsApp = () => {
-//   window.open(`https://wa.me/?text=${encodeURIComponent(`Check out this ${data?.carName} ${data?.brand}! ${shareUrl}`)}`, '_blank');
-// };
+export default NavbarAdmin

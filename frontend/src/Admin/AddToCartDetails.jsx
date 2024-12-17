@@ -130,7 +130,7 @@ function CarItem({ item, onRemove, user }) {
   );
 }
 
-function CartDetails() {
+function AddToCartDetails() {
   const [cartData, setCartData] = useState({ user: {}, items: [] });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -234,5 +234,5 @@ function CartDetails() {
   );
 }
 
-export default CartDetails;
+export default AddToCartDetails;
 

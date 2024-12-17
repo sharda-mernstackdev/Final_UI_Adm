@@ -41,7 +41,7 @@ const StatCard1 = ({ icon: Icon, title, value, change, changeType }) => (
   </motion.div>
 );
 
-const UsersDashboard = () => {
+const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -103,7 +103,7 @@ const UsersDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Link to="/total-user">
+        <Link to="/admin/total-user">
           <StatCard1
             icon={FaUsers}
             title="Total Users"
@@ -113,7 +113,7 @@ const UsersDashboard = () => {
           />
         </Link>
 
-        <Link to="/active-user">
+        <Link to="/admin/active-user">
           <StatCard1
             icon={FaUserCircle}
             title="Active Users"
@@ -123,7 +123,7 @@ const UsersDashboard = () => {
           />
         </Link>
 
-        <Link to="/user">
+        <Link to="/admin/user">
           <StatCard1
             icon={FaChartBar}
             title="User Growth"
@@ -133,7 +133,7 @@ const UsersDashboard = () => {
           />
         </Link>
 
-        <Link to="/new-user">
+        <Link to="/admin/new-user">
           <StatCard1
             icon={FaUserCircle}
             title="New Users"
@@ -185,7 +185,7 @@ const UsersDashboard = () => {
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
-                        to={`/user-details/${user._id}`}
+                        to={`/admin/user-details/${user._id}`}
                         className="text-sm font-bold text-black-600 hover:text-orange-500 "
                       >
                         <div className="flex items-center">
@@ -229,7 +229,7 @@ const UsersDashboard = () => {
           </div>
           {filteredUsers.length > displayCount && (
             <div className="mt-4 text-center">
-              <Link to='/total-user'
+              <Link to='/admin/total-user'
                 onClick={() => setDisplayCount((prevCount) => prevCount + 5)}
                 className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
               >
@@ -243,5 +243,5 @@ const UsersDashboard = () => {
   );
 };
 
-export default UsersDashboard;
+export default Users;
 
