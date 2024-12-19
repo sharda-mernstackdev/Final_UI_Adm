@@ -33,7 +33,7 @@ export default function Sidebar({ open, setOpen }) {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-30 w-64 h-[800px] overflow-y-auto mt-[-100px]  transition duration-300 transform bg-orange-600 lg:translate-x-0 lg:static lg:inset-0 ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 h-[800px] overflow-y-auto transition duration-300 transform bg-orange-600 lg:translate-x-0 lg:static lg:inset-0 ${
           open ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'
         }`}
       >
