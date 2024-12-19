@@ -24,7 +24,7 @@ const AdminCard = ({ title, icon: Icon, onClick, children }) => (
   </motion.div>
 );
 
-function UserDetails() {
+function AdminUserDetails() {
   const params = useParams(); // Move useParams here
 
   const [selectedSection, setSelectedSection] = useState(null);
@@ -126,4 +126,4 @@ function UserDetails() {
   );
 }
 
-export default UserDetails;
+export default AdminUserDetails;

@@ -54,6 +54,7 @@ import TestDriveDetails from "./Admin/TestDriveDetails";
 import TotalCars from "./Admin/TotalCars";
 import NewUser from "./Admin/NewUser";
 import CarDetails from "./Admin/CarsData";
+import AdminUserDetails from "./Admin/UserDetails";
 
 // Helper to conditionally show Navbar/Footer
 const LayoutWrapper = ({ children }) => {
@@ -118,7 +119,7 @@ function App() {
             <Route path="upload" element={<UploadCar />} />
             <Route path="total-user" element={<TotalUser />} />
             <Route path="active-user" element={<ActiveUser />} />
-            <Route path="user-details/:id" element={<UserDetails />} />
+            <Route path="user-details/:id" element={<AdminUserDetails />} />
             <Route path="test-drive" element={<BookTestDrive />} />
             <Route path="testDrive-details/:id" element={<TestDriveDetails />} />
             <Route path="book-drive-details/:id" element={<UserTestDrive />} />
