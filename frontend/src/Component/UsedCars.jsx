@@ -47,94 +47,94 @@ const brandsWithCarNames = [
     name: "Ford",
     carNames: ["EcoSport", "Figo", "Aspire", "Endeavour"]
   },
-  {
-    name: "MG",
-    carNames: ["Hector", "Astor", "Gloster"]
-  },
-  {
-    name: "Datsun",
-    carNames: ["GO", "GO+", "redi-GO"]
-  },
-  {
-    name: "Skoda",
-    carNames: ["Rapid", "Octavia", "Superb", "Kushaq"]
-  },
-  {
-    name: "Toyota",
-    carNames: ["Innova", "Fortuner", "Glanza", "Urban Cruiser"]
-  },
-  {
-    name: "Jeep",
-    carNames: ["Compass", "Wrangler", "Grand Cherokee"]
-  },
-  {
-    name: "Nissan",
-    carNames: ["Magnite", "Kicks", "GT-R"]
-  },
-  {
-    name: "BMW",
-    carNames: ["3 Series", "5 Series", "X1", "X3", "X5", "7 Series", "Z4"]
-  },
-  {
-    name: "Mercedes-Benz",
-    carNames: ["C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "A-Class"]
-  },
-  {
-    name: "Tesla",
-    carNames: ["Model S", "Model 3", "Model X", "Model Y"]
-  },
-  {
-    name: "Chevrolet",
-    carNames: ["Beat", "Cruze", "Spark", "Tavera", "Trailblazer"]
-  },
-  {
-    name: "Volvo",
-    carNames: ["XC40", "XC60", "XC90", "S60", "V60", "V90"]
-  },
-  {
-    name: "Ferrari",
-    carNames: ["Portofino", "F8 Tributo", "488 Spider", "812 Superfast"]
-  },
-  {
-    name: "Lamborghini",
-    carNames: ["Huracan", "Aventador", "Urus"]
-  },
-  {
-    name: "Porsche",
-    carNames: ["911", "Cayenne", "Macan", "Panamera", "Taycan"]
-  },
-  {
-    name: "Suzuki",
-    carNames: ["Jimny", "Vitara"]
-  },
-  {
-    name: "Land Rover",
-    carNames: ["Defender", "Discovery", "Range Rover", "Evoque", "Velar"]
-  },
-  {
-    name: "Mitsubishi",
-    carNames: ["Pajero", "Outlander", "Eclipse Cross", "ASX"]
-  },
-  {
-    name: "Peugeot",
-    carNames: ["208", "308", "3008", "5008"]
-  },
-  {
-    name: "Fiat",
-    carNames: ["500", "Punto", "Linea", "Abarth"]
-  },
-  {
-    name: "Rolls Royce",
-    carNames: ["Phantom", "Ghost", "Wraith", "Cullinan"]
-  },
-  {
-    name: "Jaguar",
-    carNames: ["XE", "XF", "F-Pace", "I-Pace", "E-Pace"]
-  },
-  {
-    name: "Maserati",
-    carNames: ["Ghibli", "Levante", "Quattroporte", "MC20"]
-  }
+  // {
+  //   name: "MG",
+  //   carNames: ["Hector", "Astor", "Gloster"]
+  // },
+  // {
+  //   name: "Datsun",
+  //   carNames: ["GO", "GO+", "redi-GO"]
+  // },
+  // {
+  //   name: "Skoda",
+  //   carNames: ["Rapid", "Octavia", "Superb", "Kushaq"]
+  // },
+  // {
+  //   name: "Toyota",
+  //   carNames: ["Innova", "Fortuner", "Glanza", "Urban Cruiser"]
+  // },
+  // {
+  //   name: "Jeep",
+  //   carNames: ["Compass", "Wrangler", "Grand Cherokee"]
+  // },
+  // {
+  //   name: "Nissan",
+  //   carNames: ["Magnite", "Kicks", "GT-R"]
+  // },
+  // {
+  //   name: "BMW",
+  //   carNames: ["3 Series", "5 Series", "X1", "X3", "X5", "7 Series", "Z4"]
+  // },
+  // {
+  //   name: "Mercedes-Benz",
+  //   carNames: ["C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "A-Class"]
+  // },
+  // {
+  //   name: "Tesla",
+  //   carNames: ["Model S", "Model 3", "Model X", "Model Y"]
+  // },
+  // {
+  //   name: "Chevrolet",
+  //   carNames: ["Beat", "Cruze", "Spark", "Tavera", "Trailblazer"]
+  // },
+  // {
+  //   name: "Volvo",
+  //   carNames: ["XC40", "XC60", "XC90", "S60", "V60", "V90"]
+  // },
+  // {
+  //   name: "Ferrari",
+  //   carNames: ["Portofino", "F8 Tributo", "488 Spider", "812 Superfast"]
+  // },
+  // {
+  //   name: "Lamborghini",
+  //   carNames: ["Huracan", "Aventador", "Urus"]
+  // },
+  // {
+  //   name: "Porsche",
+  //   carNames: ["911", "Cayenne", "Macan", "Panamera", "Taycan"]
+  // },
+  // {
+  //   name: "Suzuki",
+  //   carNames: ["Jimny", "Vitara"]
+  // },
+  // {
+  //   name: "Land Rover",
+  //   carNames: ["Defender", "Discovery", "Range Rover", "Evoque", "Velar"]
+  // },
+  // {
+  //   name: "Mitsubishi",
+  //   carNames: ["Pajero", "Outlander", "Eclipse Cross", "ASX"]
+  // },
+  // {
+  //   name: "Peugeot",
+  //   carNames: ["208", "308", "3008", "5008"]
+  // },
+  // {
+  //   name: "Fiat",
+  //   carNames: ["500", "Punto", "Linea", "Abarth"]
+  // },
+  // {
+  //   name: "Rolls Royce",
+  //   carNames: ["Phantom", "Ghost", "Wraith", "Cullinan"]
+  // },
+  // {
+  //   name: "Jaguar",
+  //   carNames: ["XE", "XF", "F-Pace", "I-Pace", "E-Pace"]
+  // },
+  // {
+  //   name: "Maserati",
+  //   carNames: ["Ghibli", "Levante", "Quattroporte", "MC20"]
+  // }
 ];
 
 const fetchCarsData = async (budget, selectedFilters) => {

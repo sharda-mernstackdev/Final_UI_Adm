@@ -1,12 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { FaCar, FaGasPump, FaRoad, FaPalette, FaIdCard, FaMoneyBillWave, FaImage } from 'react-icons/fa';
 
 const brands = ['Tata', 'Maruti Suzuki', 'Kia', 'Toyota', 'Honda', 'Ford', 'Hyundai', 'Mahindra', 'Nissan', 'Volkswagen', 'BMW', 'Audi', 'Other'];
 const fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'CNG', 'LPG'];
-// const bodyTypes = ['Hatchback', 'Sedan', 'SUV', 'MUV', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Jeep'];
 
 const UploadCar = () => {
   const [step, setStep] = useState(1);
@@ -16,8 +13,7 @@ const UploadCar = () => {
     year: new Date().getFullYear(),
     kilometer: 0,
     fuelType: '',
-   
-    color: 'red',
+    color: '',
     vehicleNumber: '',
     owner: '',
     price: '',
@@ -28,7 +24,6 @@ const UploadCar = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const fileInputRef = useRef(null);
-  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +53,6 @@ const UploadCar = () => {
     if (formData.year < 1900 || formData.year > new Date().getFullYear()) newErrors.year = 'Invalid year';
     if (formData.kilometer < 0) newErrors.kilometer = 'Kilometer must be positive';
     if (!formData.fuelType) newErrors.fuelType = 'Fuel type is required';
-    // if (!formData.bodyType) newErrors.bodyType = 'Body type is required';
     if (!formData.vehicleNumber.trim()) newErrors.vehicleNumber = 'Vehicle number is required';
     if (!formData.owner.trim()) newErrors.owner = 'Owner name is required';
     if (formData.price <= 0) newErrors.price = 'Price must be greater than 0';
@@ -83,11 +77,8 @@ const UploadCar = () => {
         formDataToSend.append('images', image.file);
       });
   
-      
-  
-      const response = await fetch('http://localhost:3000/api/cars/newCar1 ', {
+      const response = await fetch('http://localhost:3000/api/cars/newCar1', {
         method: 'POST',
-       
         body: formDataToSend,
       });
   
@@ -98,11 +89,10 @@ const UploadCar = () => {
   
       const data = await response.json();
       if (data.success) {
-        toast.success(data.message);
         setShowSuccessModal(true);
       }
     } catch (error) {
-      toast.error(error.message);
+      console.error('Error:', error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -193,7 +183,7 @@ const UploadCar = () => {
                 value={formData.kilometer}
                 onChange={handleInputChange}
               />
-              <span className='text-black'>{formData.kilometer} km</span>
+              <span className="text-black">{formData.kilometer} km</span>
             </div>
             {errors.kilometer && <p className="error">{errors.kilometer}</p>}
 
@@ -207,17 +197,6 @@ const UploadCar = () => {
               ))}
             </select>
             {errors.fuelType && <p className="error">{errors.fuelType}</p>}
-
-            {/* <label htmlFor="bodyType">Body Type</label>
-            <select id="bodyType" name="bodyType" value={formData.bodyType} onChange={handleInputChange}>
-              <option value="">Select body type</option>
-              {bodyTypes.map((type) => (
-                <option key={type} value={type.toLowerCase()}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            {errors.bodyType && <p className="error">{errors.bodyType}</p>} */}
           </div>
         );
       case 3:
@@ -230,7 +209,7 @@ const UploadCar = () => {
               name="owner"
               value={formData.owner}
               onChange={handleInputChange}
-              placeholder="Enter owner's name"
+              placeholder="1st or 2nd owner?"
             />
             {errors.owner && <p className="error">{errors.owner}</p>}
 
@@ -250,17 +229,14 @@ const UploadCar = () => {
         return (
           <div className="form-group">
             <label htmlFor="color">Color</label>
-            <div className="color-picker">
-              <input
-                type="text"
-                id="text"
-                name="text"
-                value={formData.color}
-                onChange={handleInputChange}
-              />
-              <span>{formData.color}</span>
-            </div>
-
+            <input
+              type="text"
+              id="color"
+              name="color"
+              value={formData.color}
+              onChange={handleInputChange}
+              placeholder="Enter car color"
+            />
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -276,7 +252,7 @@ const UploadCar = () => {
       case 5:
         return (
           <div className="form-group">
-            <label htmlFor="images" >Car Images</label>
+            <label htmlFor="images">Car Images</label>
             <div
               className="dropzone"
               onClick={() => fileInputRef.current.click()}
@@ -295,7 +271,7 @@ const UploadCar = () => {
                 multiple
                 style={{ display: 'none' }}
               />
-              <p className='text-black'>Drag and drop images here or click to upload</p>
+              <p className="text-black">Drag and drop images here or click to upload</p>
             </div>
             {errors.images && <p className="error">{errors.images}</p>}
             <div className="image-preview">
@@ -312,7 +288,7 @@ const UploadCar = () => {
         );
       case 6:
         return (
-          <div className="form-group">
+          <div className="form-group text-black">
             <label htmlFor="price">Price (in ₹)</label>
             <input
               type="number"
@@ -322,13 +298,13 @@ const UploadCar = () => {
               onChange={handleInputChange}
               placeholder="Enter price"
             />
-            {errors.price && <p className="error">{errors.price}</p>}
+            {errors.price && <p className="error text-black">{errors.price}</p>}
 
             <div className="summary">
               <h3>Final Summary</h3>
               <div className="summary-grid">
                 <div>
-                  <p className="label">Car Name:</p>
+                  <p className="label" >Car Name:</p>
                   <p>{formData.carName}</p>
                 </div>
                 <div>
@@ -347,10 +323,6 @@ const UploadCar = () => {
                   <p className="label">Fuel Type:</p>
                   <p>{formData.fuelType}</p>
                 </div>
-                {/* <div>
-                  <p className="label">Body Type:</p>
-                  <p>{formData.bodyType}</p>
-                </div> */}
                 <div>
                   <p className="label">Color:</p>
                   <p>{formData.color}</p>
@@ -361,11 +333,11 @@ const UploadCar = () => {
                 </div>
                 <div>
                   <p className="label">Owner:</p>
-                  <p className='text-blue-600'>{formData.owner}</p>
+                  <p className="text-blue-600">{formData.owner}</p>
                 </div>
                 <div>
                   <p className="label">Price:</p>
-                  <p >₹{formData.price}</p>
+                  <p>₹{formData.price}</p>
                 </div>
               </div>
               <div>
@@ -404,8 +376,7 @@ const UploadCar = () => {
                 year: new Date().getFullYear(),
                 kilometer: 0,
                 fuelType: '',
-                bodyType: '',
-                color: '#000000',
+                color: '',
                 vehicleNumber: '',
                 owner: '',
                 price: '',
@@ -419,9 +390,9 @@ const UploadCar = () => {
           >
             Submit Another Car
           </button>
-          <button onClick={() => navigate('/upload')} className="button secondary">
+          {/* <button onClick={() => {}} className="button secondary">
             View Listings
-          </button>
+          </button> */}
         </div>
       </div>
     );
@@ -431,8 +402,7 @@ const UploadCar = () => {
     <div className="container">
       <div className="hero">
         <div className="hero-content">
-          <h1> Car Upload</h1>
-          {/* <p>List your car with ease and connect with potential buyers</p> */}
+          <h1>Car Upload</h1>
         </div>
         <div className="form-container">
           <form onSubmit={handleSubmit}>
@@ -496,12 +466,6 @@ const UploadCar = () => {
           font-size: 48px;
           margin-bottom: 20px;
           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        .hero p {
-          font-size: 24px;
-          max-width: 600px;
-          margin: 0 auto;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         .form-container {
           background-color: rgba(255, 255, 255, 0.95);
@@ -594,26 +558,6 @@ const UploadCar = () => {
           border-radius: 50%;
           background: #f97316;
           cursor: pointer;
-        }
-        .color-picker {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .color-picker input[type="color"] {
-          -webkit-appearance: none;
-          width: 50px;
-          height: 50px;
-          border: none;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-        .color-picker input[type="color"]::-webkit-color-swatch-wrapper {
-          padding: 0;
-        }
-        .color-picker input[type="color"]::-webkit-color-swatch {
-          border: none;
-          border-radius: 50%;
         }
         .dropzone {
           border: 2px dashed #e2e8f0;
@@ -757,9 +701,6 @@ const UploadCar = () => {
         @media (max-width: 768px) {
           .hero h1 {
             font-size: 36px;
-          }
-          .hero p {
-            font-size: 18px;
           }
           .form-container {
             padding: 20px;

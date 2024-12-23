@@ -248,7 +248,7 @@ const Home = () => {
                 <h3 className="text-lg font-semibold mb-2">{car.name}</h3>
                 <p className="text-gray-600 mb-4">{car.price}</p>
                 <button className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition-colors">
-                  Check September Offers
+                  Check December Offers
                 </button>
               </div>
             </div>
