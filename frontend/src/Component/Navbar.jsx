@@ -66,8 +66,7 @@ const Dropdown = ({ label, items, isMobile, onItemClick }) => {
       {isOpen && (
         <div 
           className={`bg-white rounded-md shadow-lg overflow-hidden ${isMobile ? 'w-full' : 'absolute w-64 right-0'}`}
-          aria-label={`${label} submenu`}
-          role="menu"
+          aria-label={`${label} submenu`}          role="menu"
         >
           <div className="py-1 w-full">
             {items.map((item, index) => (
@@ -120,13 +119,16 @@ const Navbar = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [cartCount, setCartCount] = useState(0);
 
+  
+  
+
+
   const fetchUserDetails = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch('http://localhost:3000/api/users/user-detail', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization':` Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
         credentials: 'include',
@@ -141,13 +143,11 @@ const Navbar = () => {
         setUser(data.data);
         setError(null);
       } else {
-        setError(data.message || 'An error occurred');
+        throw new Error(data.message || 'An error occurred');
       }
     } catch (err) {
-      setError('An error occurred while fetching user details');
+      setError(err.message || 'An error occurred while fetching user details');
       console.error(err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -157,7 +157,7 @@ const Navbar = () => {
         method: 'GET',
         credentials: 'include',
         headers: {
-          'Authorization':` Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
       });
@@ -168,13 +168,26 @@ const Navbar = () => {
       setCartCount(itemCount);
     } catch (err) {
       setError(err.message || 'Failed to fetch cart data');
+      console.error(err);
     }
   };
 
+  const fetchData = async () => {
+    setIsLoading(true);
+    await Promise.all([fetchUserDetails(), fetchCartData()]);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    fetchUserDetails();
-    fetchCartData();
-  }, [location.pathname]);
+    fetchData();
+
+    // Set up interval for real-time updates
+    const intervalId = setInterval(fetchData,1000); // Fetch every 5 seconds
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array ensures this runs once on mount
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -200,8 +213,10 @@ const Navbar = () => {
   
       if (response.ok) {
         console.log('Logged out successfully');
-        setUser(null);
+      
         localStorage.removeItem('token');
+        setUser(null);
+        setCartCount(0);
         navigate('/login');
       } else {
         const errorData = await response.json();

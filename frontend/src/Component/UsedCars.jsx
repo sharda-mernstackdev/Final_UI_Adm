@@ -47,37 +47,39 @@ const brandsWithCarNames = [
     name: "Ford",
     carNames: ["EcoSport", "Figo", "Aspire", "Endeavour"]
   },
-  // {
-  //   name: "MG",
-  //   carNames: ["Hector", "Astor", "Gloster"]
-  // },
+  {
+    name: "MG",
+    carNames: ["Hector", "Astor", "Gloster"]
+  },
   // {
   //   name: "Datsun",
   //   carNames: ["GO", "GO+", "redi-GO"]
   // },
-  // {
-  //   name: "Skoda",
-  //   carNames: ["Rapid", "Octavia", "Superb", "Kushaq"]
-  // },
-  // {
-  //   name: "Toyota",
-  //   carNames: ["Innova", "Fortuner", "Glanza", "Urban Cruiser"]
-  // },
+  {
+    name: "Skoda",
+    carNames: ["Rapid", "Octavia", "Superb", "Kushaq"]
+  },
+  {
+    name: "Toyota",
+    carNames: ["Innova", "Fortuner", "Glanza", "Urban Cruiser"]
+  },
   // {
   //   name: "Jeep",
   //   carNames: ["Compass", "Wrangler", "Grand Cherokee"]
   // },
-  // {
-  //   name: "Nissan",
-  //   carNames: ["Magnite", "Kicks", "GT-R"]
-  // },
-  // {
-  //   name: "BMW",
-  //   carNames: ["3 Series", "5 Series", "X1", "X3", "X5", "7 Series", "Z4"]
-  // },
+  {
+    name: "Nissan",
+    carNames: ["Magnite", "Kicks", "GT-R"]
+  },
+  {
+    name: "BMW",
+    // carNames: ["3 Series", "5 Series", "X1", "X3", "X5", "7 Series", "Z4"]
+    carNames: ["3 Series", "5 Series", "X1", "X3"]
+  },
   // {
   //   name: "Mercedes-Benz",
-  //   carNames: ["C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "A-Class"]
+  //   // carNames: ["C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "A-Class"]
+  //   carNames: ["C-Class", "S-Class", "GLA", "A-Class"]
   // },
   // {
   //   name: "Tesla",
@@ -99,10 +101,10 @@ const brandsWithCarNames = [
   //   name: "Lamborghini",
   //   carNames: ["Huracan", "Aventador", "Urus"]
   // },
-  // {
-  //   name: "Porsche",
-  //   carNames: ["911", "Cayenne", "Macan", "Panamera", "Taycan"]
-  // },
+  {
+    name: "Porsche",
+    carNames: ["911", "Cayenne", "Macan", "Panamera", "Taycan"]
+  },
   // {
   //   name: "Suzuki",
   //   carNames: ["Jimny", "Vitara"]
@@ -127,10 +129,10 @@ const brandsWithCarNames = [
   //   name: "Rolls Royce",
   //   carNames: ["Phantom", "Ghost", "Wraith", "Cullinan"]
   // },
-  // {
-  //   name: "Jaguar",
-  //   carNames: ["XE", "XF", "F-Pace", "I-Pace", "E-Pace"]
-  // },
+  {
+    name: "Jaguar",
+    carNames: ["XE", "XF", "F-Pace", "I-Pace", "E-Pace"]
+  },
   // {
   //   name: "Maserati",
   //   carNames: ["Ghibli", "Levante", "Quattroporte", "MC20"]

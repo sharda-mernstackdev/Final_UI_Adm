@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCar, FaGasPump, FaRoad, FaPalette, FaIdCard, FaMoneyBillWave, FaImage } from 'react-icons/fa';
 
-const brands = ['Tata', 'Maruti Suzuki', 'Kia', 'Toyota', 'Honda', 'Ford', 'Hyundai', 'Mahindra', 'Nissan', 'Volkswagen', 'BMW', 'Audi', 'Other'];
+const brands = ['Tata', 'Jaguar', 'Porsche', 'MG', 'Skoda', 'Maruti Suzuki', 'Kia', 'Toyota', 'Honda', 'Ford', 'Hyundai', 'Mahindra', 'Nissan', 'Volkswagen', 'BMW', 'Audi', 'Renault', 'Other'];
 const fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'CNG', 'LPG'];
 
 const UploadCar = () => {
